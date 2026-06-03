@@ -228,6 +228,30 @@ h3 {
   grid-template-columns: 44px 1fr 44px;
   gap: 8px;
   margin-top: 14px;
+  align-items: end;
+}
+
+.day-field {
+  position: relative;
+  display: block;
+}
+
+.day-field span {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.day-field small {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  pointer-events: none;
 }
 
 .icon-btn,
@@ -262,6 +286,10 @@ h3 {
   background: var(--panel-soft);
   color: var(--ink);
   padding: 0 10px;
+}
+
+.day-input {
+  padding-right: 44px;
 }
 
 .category-grid {

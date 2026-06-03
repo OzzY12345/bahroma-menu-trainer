@@ -121,7 +121,11 @@ function renderToday(plan, categories) {
       </ul>
       <div class="day-controls">
         <button class="icon-btn" data-action="prev-day" aria-label="Предыдущий день">‹</button>
-        <input class="day-input" type="number" min="1" max="14" value="${getCurrentStudyDay()}" data-action="set-day" />
+        <label class="day-field">
+          <span>День программы</span>
+          <input class="day-input" type="number" min="1" max="14" value="${getCurrentStudyDay()}" data-action="set-day" />
+          <small>из 14</small>
+        </label>
         <button class="icon-btn" data-action="next-day" aria-label="Следующий день">›</button>
       </div>
     </section>
