@@ -1,9 +1,10 @@
 import http from "node:http";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { extname, join, normalize } from "node:path";
+import { getServerConfig } from "../src/serverConfig.js";
 
 const root = process.cwd();
-const port = Number(process.env.PORT || 4173);
+const { host, port } = getServerConfig();
 
 const types = {
   ".css": "text/css; charset=utf-8",
@@ -28,6 +29,6 @@ const server = http.createServer((request, response) => {
   createReadStream(filePath).pipe(response);
 });
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`BAHROMA trainer: http://127.0.0.1:${port}`);
+server.listen(port, host, () => {
+  console.log(`BAHROMA trainer: http://${host}:${port}`);
 });
