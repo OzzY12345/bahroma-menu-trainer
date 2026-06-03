@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { getGuestMarkers, getStudyHint, normalizeMenuItem } from "../src/dataRules.js";
+import { getGuestMarkers, getStudyHint, isStudyCardItem, normalizeMenuItem } from "../src/dataRules.js";
 
 test("guest markers include lactose and gluten as guest-facing restrictions", () => {
   const item = {
@@ -10,6 +10,41 @@ test("guest markers include lactose and gluten as guest-facing restrictions", ()
     description: "Выпечка с сыром сулугуни, яйцом и пшеничным тестом."
   };
   assert.deepEqual(getGuestMarkers(item), ["молочное / лактоза", "глютен", "яйцо"]);
+});
+
+test("study cards exclude packaged drinks and simple ready-made condiments", () => {
+  assert.equal(
+    isStudyCardItem({
+      category: "Напитки",
+      title: "Сок Я вишня",
+      description: "Состав на сайте не указан."
+    }),
+    false
+  );
+  assert.equal(
+    isStudyCardItem({
+      category: "Напитки",
+      title: "Эвервесс Кола 0,25 л",
+      description: "Состав на сайте не указан."
+    }),
+    false
+  );
+  assert.equal(
+    isStudyCardItem({
+      category: "Гарниры и соусы",
+      title: "Сметана",
+      description: "Кисломолочный продукт на основе сливок"
+    }),
+    false
+  );
+  assert.equal(
+    isStudyCardItem({
+      category: "Гарниры и соусы",
+      title: "Соус \"Дзадзики\"",
+      description: "Соус на основе творожного сыра, сливок, лимонного сока и огурца."
+    }),
+    true
+  );
 });
 
 test("guest markers separate fish and seafood", () => {

@@ -1,4 +1,4 @@
-const CACHE_NAME = "bahroma-menu-trainer-v2";
+const CACHE_NAME = "bahroma-menu-trainer-v3";
 const ASSETS = [
   "/",
   "/index.html",

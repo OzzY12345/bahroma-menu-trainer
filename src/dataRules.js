@@ -105,6 +105,12 @@ const TYPE_BY_CATEGORY = new Map([
 
 const SERVICE_ONLY_TEXT = "состав на сайте не указан";
 
+const READY_MADE_TITLES = new Set([
+  "кетчуп",
+  "майонез",
+  "сметана"
+]);
+
 export function getGuestMarkers(item) {
   const text = `${item.title || ""} ${item.description || ""}`.toLowerCase();
   const markers = [];
@@ -121,6 +127,11 @@ export function getStudyHint(item) {
   const description = cleanSentence(item.description);
   if (!description || description.toLowerCase() === SERVICE_ONLY_TEXT) return `${type}: состав на сайте не указан.`;
   return `${type}.`;
+}
+
+export function isStudyCardItem(item) {
+  if (item.category === "Напитки") return false;
+  return !READY_MADE_TITLES.has(cleanSentence(item.title).toLowerCase());
 }
 
 export function normalizeMenuItem(item) {
