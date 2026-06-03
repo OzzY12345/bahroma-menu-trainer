@@ -202,7 +202,7 @@ function renderStudyCard(item) {
   const status = progress ? ["Не знаю", "Почти", "Знаю"][progress.level] : "Новое";
   const modeHint =
     state.cardMode === "title"
-      ? "Сначала ответь вслух: что это за блюдо, из чего оно, что важно гостю."
+      ? "Сначала ответь вслух: что это за блюдо, из чего оно, какие есть ограничения для гостя."
       : "Сначала по составу назови блюдо, потом открой ответ и сверься.";
   const scopeHint =
     state.cardScope === "exam"
@@ -227,12 +227,12 @@ function renderStudyCard(item) {
       ${
         state.answerVisible
           ? `<div class="rating-guide">
-              <b>Как оценить:</b> правильно = тип блюда + главные ингредиенты + важный маркер.
+              <b>Как оценить:</b> правильно = тип блюда + главные ингредиенты + маркеры для гостя.
             </div>
             <div class="rating">
-              <button class="miss" data-answer="miss">Ошибся</button>
-              <button class="almost" data-answer="almost">Почти угадал</button>
-              <button class="know" data-answer="know">Ответил правильно</button>
+              <button class="miss" data-answer="miss">Не вспомнил</button>
+              <button class="almost" data-answer="almost">Частично вспомнил</button>
+              <button class="know" data-answer="know">Вспомнил правильно</button>
             </div>`
           : `<div class="rating-placeholder">Оценка появится после открытия ответа.</div>`
       }
@@ -244,8 +244,8 @@ function renderAnswer(item, includeTitle = true) {
   return `
     ${includeTitle ? `<h3>${escapeHtml(item.title)}</h3>` : ""}
     <p><b>Состав:</b> ${escapeHtml(item.description)}</p>
-    <p><b>Запомнить:</b> ${escapeHtml(item.remember)}</p>
-    ${item.markers?.length ? `<p class="markers"><b>Содержит:</b> ${item.markers.map(escapeHtml).join(", ")}</p>` : ""}
+    <p><b>Тип:</b> ${escapeHtml(item.remember)}</p>
+    ${item.markers?.length ? `<p class="markers"><b>Маркеры для проверки:</b> ${item.markers.map(escapeHtml).join(", ")}</p>` : ""}
   `;
 }
 
@@ -282,8 +282,9 @@ function renderListItem(item) {
 function renderScenarios() {
   const scenarios = [
     { label: "Гость хочет мясное", marker: "мясо" },
-    { label: "Гость не ест рыбу", marker: "рыба/морепродукты", inverted: true },
-    { label: "Гость хочет сырное", marker: "молочное/сыр" },
+    { label: "Проверить: без рыбы и морепродуктов", marker: ["рыба", "морепродукты"], inverted: true },
+    { label: "Проверить: без молочного / лактозы", marker: "молочное / лактоза", inverted: true },
+    { label: "Проверить: без глютена", marker: "глютен", inverted: true },
     { label: "Гость просит неострое", marker: "острое", inverted: true }
   ];
   return `
@@ -298,15 +299,16 @@ function renderScenarios() {
 }
 
 function renderScenario(scenario) {
+  const markers = Array.isArray(scenario.marker) ? scenario.marker : [scenario.marker];
   const items = state.menu.filter((item) => {
-    const hasMarker = item.markers?.includes(scenario.marker);
+    const hasMarker = markers.some((marker) => item.markers?.includes(marker));
     return scenario.inverted ? !hasMarker : hasMarker;
   });
   const sample = pickRandomItems(items, 5);
   return `
     <article class="scenario">
       <h3>${escapeHtml(scenario.label)}</h3>
-      <p>${scenario.inverted ? "Проверь и объясни, почему эти варианты безопаснее." : "Назови состав и предложи 2-3 варианта."}</p>
+      <p>${scenario.inverted ? "Это тренировочная выборка без явного маркера. Перед рекомендацией гостю всё равно сверь состав." : "Назови состав и предложи 2-3 варианта."}</p>
       <ol>
         ${sample.map((item) => `<li>${escapeHtml(item.title)}</li>`).join("")}
       </ol>
