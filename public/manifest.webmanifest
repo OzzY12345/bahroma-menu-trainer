@@ -1,0 +1,15 @@
+{
+  "name": "BAHROMA: тренажер меню",
+  "short_name": "BAHROMA меню",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf3",
+  "theme_color": "#b71d1a",
+  "icons": [
+    {
+      "src": "/public/icon.svg",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    }
+  ]
+}
