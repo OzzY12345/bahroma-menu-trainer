@@ -1,4 +1,5 @@
 export const PROGRAM_LENGTH_DAYS = 14;
+const PRIORITY_CATEGORIES = ["Бизнес-ланчи"];
 
 export function clampStudyDay(day) {
   const numeric = Number.isFinite(Number(day)) ? Number(day) : 1;
@@ -38,8 +39,9 @@ export function getStudyPhase(dayInput) {
 export function buildCategoryPlan(categories) {
   const plan = {};
   const focusDays = [3, 4, 5, 6, 7, 8];
+  const regularCategories = categories.filter((category) => !PRIORITY_CATEGORIES.includes(category));
   focusDays.forEach((day, index) => {
-    plan[day] = categories.slice(index * 2, index * 2 + 2);
+    plan[day] = regularCategories.slice(index * 2, index * 2 + 2);
   });
   return plan;
 }
@@ -150,6 +152,21 @@ export function getDailyPlan(menu, progress, currentDay) {
   const mistakeItems = getMistakeItems(menu, progress);
 
   if (phase.type === "map") {
+    const priorityItems = menu.filter((item) => PRIORITY_CATEGORIES.includes(item.category));
+    if (day === 1 && priorityItems.length > 0) {
+      return {
+        day,
+        phase,
+        focusCategories: PRIORITY_CATEGORIES,
+        items: priorityItems,
+        checklist: [
+          "Выучить названия всех бизнес-ланчей.",
+          "Проговорить состав каждого ланча вслух.",
+          "Отметить ланчи, которые путаются между собой."
+        ]
+      };
+    }
+
     return {
       day,
       phase,

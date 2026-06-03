@@ -5,6 +5,7 @@ import {
   buildCategoryPlan,
   clampStudyDay,
   getDueItems,
+  getDailyPlan,
   getExamItems,
   getItemId,
   getNextReviewDay,
@@ -13,6 +14,7 @@ import {
 } from "../src/learning.js";
 
 const categories = [
+  "Бизнес-ланчи",
   "Сезонное меню",
   "Супы",
   "Холодные закуски и салаты",
@@ -46,6 +48,18 @@ test("buildCategoryPlan spreads categories across focus days", () => {
   assert.deepEqual(plan[3], ["Сезонное меню", "Супы"]);
   assert.deepEqual(plan[4], ["Холодные закуски и салаты", "Горячие закуски"]);
   assert.deepEqual(plan[8], ["Напитки", "Праздничные боксы"]);
+});
+
+test("day 1 prioritizes business lunches before the rest of the menu", () => {
+  const menu = [
+    { category: "Бизнес-ланчи", title: "Ланч \"Таманский\"", description: "Борщ с цыплёнком. Люля-кебаб из цыплёнка с рисом. Оливье с цыплёнком." },
+    { category: "Бизнес-ланчи", title: "Ланч \"Мясной\"", description: "Борщ с цыплёнком. Плов по-бухарски с цыплёнком." },
+    { category: "Супы", title: "Харчо", description: "Суп с говядиной" }
+  ];
+  const plan = getDailyPlan(menu, {}, 1);
+
+  assert.deepEqual(plan.focusCategories, ["Бизнес-ланчи"]);
+  assert.deepEqual(plan.items.map((item) => item.title), ["Ланч \"Таманский\"", "Ланч \"Мясной\""]);
 });
 
 test("updateProgress moves items through review intervals", () => {
