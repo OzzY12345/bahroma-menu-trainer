@@ -1,14 +1,16 @@
-const CACHE_NAME = "bahroma-menu-trainer-v4";
+const CACHE_NAME = "bahroma-menu-trainer-v5";
+const BASE_URL = new URL("../", self.location.href);
 const ASSETS = [
-  "/",
-  "/index.html",
-  "/src/app.js",
-  "/src/learning.js",
-  "/src/styles.css",
-  "/public/data/menu.json",
-  "/public/icon.svg",
-  "/public/manifest.webmanifest"
-];
+  "./",
+  "./index.html",
+  "./src/app.js",
+  "./src/appPaths.js",
+  "./src/learning.js",
+  "./src/styles.css",
+  "./public/data/menu.json",
+  "./public/icon.svg",
+  "./public/manifest.webmanifest"
+].map((path) => new URL(path, BASE_URL).toString());
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)));

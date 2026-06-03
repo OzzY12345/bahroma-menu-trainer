@@ -11,6 +11,7 @@ import {
   pickRandomItems,
   updateProgress
 } from "./learning.js";
+import { getAssetUrl } from "./appPaths.js";
 
 const STORAGE_KEY = "bahroma-menu-trainer";
 const app = document.querySelector("#app");
@@ -37,7 +38,7 @@ async function init() {
   const saved = readStore();
   Object.assign(state.progress, saved.progress || {});
   Object.assign(state.settings, saved.settings || {});
-  state.menu = await fetch("/public/data/menu.json").then((response) => response.json());
+  state.menu = await fetch(getAssetUrl(import.meta.url, "../public/data/menu.json")).then((response) => response.json());
   state.deck = buildDeck();
   render();
   registerServiceWorker();
@@ -482,7 +483,7 @@ function saveStore() {
 
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/public/sw.js").catch(() => {});
+    navigator.serviceWorker.register(getAssetUrl(import.meta.url, "../public/sw.js")).catch(() => {});
   }
 }
 
