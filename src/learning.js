@@ -1,5 +1,5 @@
 export const PROGRAM_LENGTH_DAYS = 14;
-const PRIORITY_CATEGORIES = ["Бизнес-ланчи"];
+const PRIORITY_CATEGORIES = ["Деловые обеды"];
 
 export function clampStudyDay(day) {
   const numeric = Number.isFinite(Number(day)) ? Number(day) : 1;
@@ -160,9 +160,9 @@ export function getDailyPlan(menu, progress, currentDay) {
         focusCategories: PRIORITY_CATEGORIES,
         items: priorityItems,
         checklist: [
-          "Выучить названия всех бизнес-ланчей.",
-          "Проговорить состав каждого ланча вслух.",
-          "Отметить ланчи, которые путаются между собой."
+          "Выучить правила делового обеда и цены.",
+          "Запомнить доступные варианты в каждом разделе.",
+          "Не учить составы: в PDF указаны только варианты выбора."
         ]
       };
     }

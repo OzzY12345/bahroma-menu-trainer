@@ -1,4 +1,4 @@
-const CACHE_NAME = "bahroma-menu-trainer-v5";
+const CACHE_NAME = "bahroma-menu-trainer-v6";
 const BASE_URL = new URL("../", self.location.href);
 const ASSETS = [
   "./",

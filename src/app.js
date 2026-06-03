@@ -242,9 +242,10 @@ function renderStudyCard(item) {
 }
 
 function renderAnswer(item, includeTitle = true) {
+  const descriptionLabel = item.category === "Деловые обеды" ? "Запомнить" : "Состав";
   return `
     ${includeTitle ? `<h3>${escapeHtml(item.title)}</h3>` : ""}
-    <p><b>Состав:</b> ${escapeHtml(item.description)}</p>
+    <p><b>${descriptionLabel}:</b> ${escapeHtml(item.description)}</p>
     <p><b>Тип:</b> ${escapeHtml(item.remember)}</p>
     ${item.markers?.length ? `<p class="markers"><b>Маркеры для проверки:</b> ${item.markers.map(escapeHtml).join(", ")}</p>` : ""}
   `;

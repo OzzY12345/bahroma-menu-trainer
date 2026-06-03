@@ -14,7 +14,7 @@ import {
 } from "../src/learning.js";
 
 const categories = [
-  "Бизнес-ланчи",
+  "Деловые обеды",
   "Сезонное меню",
   "Супы",
   "Холодные закуски и салаты",
@@ -50,16 +50,16 @@ test("buildCategoryPlan spreads categories across focus days", () => {
   assert.deepEqual(plan[8], ["Напитки", "Праздничные боксы"]);
 });
 
-test("day 1 prioritizes business lunches before the rest of the menu", () => {
+test("day 1 prioritizes business lunch constructor before the rest of the menu", () => {
   const menu = [
-    { category: "Бизнес-ланчи", title: "Ланч \"Таманский\"", description: "Борщ с цыплёнком. Люля-кебаб из цыплёнка с рисом. Оливье с цыплёнком." },
-    { category: "Бизнес-ланчи", title: "Ланч \"Мясной\"", description: "Борщ с цыплёнком. Плов по-бухарски с цыплёнком." },
+    { category: "Деловые обеды", title: "Деловые обеды: правила и цены", description: "Выберите по одному блюду из каждого раздела." },
+    { category: "Деловые обеды", title: "Деловые обеды: салаты", description: "Витаминный салат. Оливье с цыплёнком." },
     { category: "Супы", title: "Харчо", description: "Суп с говядиной" }
   ];
   const plan = getDailyPlan(menu, {}, 1);
 
-  assert.deepEqual(plan.focusCategories, ["Бизнес-ланчи"]);
-  assert.deepEqual(plan.items.map((item) => item.title), ["Ланч \"Таманский\"", "Ланч \"Мясной\""]);
+  assert.deepEqual(plan.focusCategories, ["Деловые обеды"]);
+  assert.deepEqual(plan.items.map((item) => item.title), ["Деловые обеды: правила и цены", "Деловые обеды: салаты"]);
 });
 
 test("updateProgress moves items through review intervals", () => {
