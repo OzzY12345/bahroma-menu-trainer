@@ -126,6 +126,21 @@ export function pickRandomItems(items, count) {
   return copy.slice(0, count);
 }
 
+export function getExamItems(menu, progress, count = 50) {
+  const mistakes = getMistakeItems(menu, progress);
+  const selected = new Map();
+  mistakes.slice(0, Math.min(20, count)).forEach((item) => selected.set(getItemId(item), item));
+  pickRandomItems(menu, count).forEach((item) => {
+    if (selected.size < count) selected.set(getItemId(item), item);
+  });
+  if (selected.size < count) {
+    menu.forEach((item) => {
+      if (selected.size < count) selected.set(getItemId(item), item);
+    });
+  }
+  return [...selected.values()];
+}
+
 export function getDailyPlan(menu, progress, currentDay) {
   const day = clampStudyDay(currentDay);
   const categories = getCategories(menu);

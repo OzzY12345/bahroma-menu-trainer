@@ -4,6 +4,7 @@ import {
   clampStudyDay,
   getCategories,
   getDailyPlan,
+  getExamItems,
   getItemId,
   getMistakeItems,
   getProgressStats,
@@ -160,6 +161,7 @@ function renderCards(dailyPlan, categories) {
       </div>
       <div class="segmented" aria-label="Область карточек">
         ${scopeButton("today", "Сегодня")}
+        ${scopeButton("exam", "Экзамен")}
         ${scopeButton("all", "Все")}
         ${scopeButton("errors", "Ошибки")}
       </div>
@@ -198,6 +200,14 @@ function renderStudyCard(item) {
   const answer = state.cardMode === "title" ? renderAnswer(item) : `<h3>${escapeHtml(item.title)}</h3>${renderAnswer(item, false)}`;
   const progress = state.progress[getItemId(item)];
   const status = progress ? ["Не знаю", "Почти", "Знаю"][progress.level] : "Новое";
+  const modeHint =
+    state.cardMode === "title"
+      ? "Сначала ответь вслух: что это за блюдо, из чего оно, что важно гостю."
+      : "Сначала по составу назови блюдо, потом открой ответ и сверься.";
+  const scopeHint =
+    state.cardScope === "exam"
+      ? "Экзамен: случайная колода с приоритетом старых ошибок."
+      : "Самопроверка: открой ответ только после попытки.";
 
   return `
     <article class="study-card">
@@ -205,16 +215,27 @@ function renderStudyCard(item) {
         <span>${escapeHtml(item.category)}</span>
         <span>${status}</span>
       </div>
+      <div class="card-instruction">
+        <strong>${escapeHtml(scopeHint)}</strong>
+        <span>${escapeHtml(modeHint)}</span>
+      </div>
       <div class="prompt">${escapeHtml(prompt)}</div>
       <button class="show-answer" data-action="toggle-answer">${state.answerVisible ? "Скрыть ответ" : "Показать ответ"}</button>
       <div class="answer ${state.answerVisible ? "visible" : ""}">
         ${state.answerVisible ? answer : ""}
       </div>
-      <div class="rating">
-        <button class="miss" data-answer="miss">Не знаю</button>
-        <button class="almost" data-answer="almost">Почти</button>
-        <button class="know" data-answer="know">Знаю</button>
-      </div>
+      ${
+        state.answerVisible
+          ? `<div class="rating-guide">
+              <b>Как оценить:</b> правильно = тип блюда + главные ингредиенты + важный маркер.
+            </div>
+            <div class="rating">
+              <button class="miss" data-answer="miss">Ошибся</button>
+              <button class="almost" data-answer="almost">Почти угадал</button>
+              <button class="know" data-answer="know">Ответил правильно</button>
+            </div>`
+          : `<div class="rating-placeholder">Оценка появится после открытия ответа.</div>`
+      }
     </article>
   `;
 }
@@ -416,6 +437,7 @@ function buildDeck() {
   const day = getCurrentStudyDay();
   const dailyPlan = getDailyPlan(state.menu, state.progress, day);
   let items = dailyPlan.items;
+  if (state.cardScope === "exam") items = getExamItems(state.menu, state.progress, 50);
   if (state.cardScope === "all") items = state.menu;
   if (state.cardScope === "errors") items = getMistakeItems(state.menu, state.progress);
   if (state.selectedCategory !== "Все") items = items.filter((item) => item.category === state.selectedCategory);

@@ -5,6 +5,7 @@ import {
   buildCategoryPlan,
   clampStudyDay,
   getDueItems,
+  getExamItems,
   getItemId,
   getNextReviewDay,
   getStudyPhase,
@@ -84,4 +85,20 @@ test("getDueItems returns daily focus plus due reviews without duplicates", () =
 
   assert.equal(due.length, 3);
   assert.equal(new Set(due.map(getItemId)).size, 3);
+});
+
+test("getExamItems prioritizes mistakes and fills the rest with random menu items", () => {
+  const menu = [
+    { category: "Супы", title: "Харчо", description: "Суп" },
+    { category: "Выпечка", title: "Хачапури", description: "Выпечка" },
+    { category: "Десерты", title: "Медовик", description: "Десерт" },
+    { category: "Горячие блюда", title: "Плов", description: "Горячее блюдо" }
+  ];
+  const mistakeId = getItemId(menu[2]);
+  const progress = { [mistakeId]: { mistakes: 3, level: 0 } };
+  const exam = getExamItems(menu, progress, 3);
+
+  assert.equal(exam.length, 3);
+  assert.equal(exam[0].title, "Медовик");
+  assert.equal(new Set(exam.map(getItemId)).size, 3);
 });
